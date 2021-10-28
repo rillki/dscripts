@@ -1,5 +1,5 @@
 # D scripts
-A collection of D scripts and useful pieces of code
+A collection of D scripts and useful pieces of code.
 
 ### Requirements
 * [D compiler](https://dlang.org/download)
