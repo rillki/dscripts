@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import cv2 as cv
@@ -13,6 +14,7 @@ height = 640
 argv = sys.argv[1:]
 if len(argv) < 2:
     print("\n#imgresize: imgresize.py [imgs_folder] [output_folder] {width} {height}\n")
+    sys.exit()
 elif len(argv) == 2:
     imgs_folder = argv[0]
     output_folder = argv[1]
