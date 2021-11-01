@@ -1,6 +1,13 @@
 #!/usr/bin/env rdmd
 
-import std;
+import std.stdio: writefln;
+import std.conv: to;
+import std.file: mkdirRecurse, exists, copy;
+import std.path: buildPath;
+import std.array: empty;
+import std.string: split;
+import std.getopt: getopt, defaultGetoptPrinter;
+import std.algorithm: canFind;
 
 void main(string[] args) {
 	string path = "";
