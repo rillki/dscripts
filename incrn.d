@@ -3,92 +3,91 @@
 import std;
 
 void main(string[] args) {
-	if(args.length < 2 || args.canFind("-h")) {
-		("\n=====================================================\n" ~
-			"incrn  v1.0 -- INCremental file ReNaming.\n" ~
-			"-----------------------------------------------------\n" ~
-			"USAGE:\n\tincrn.d [path] (prefix) (# of files)\n" ~
-			"OPTIONS:\n\t[]\trequired\n\t()\toptional, specify \'-\' to use defaults\n" ~
-			"\t-h\tdisplay available options and exit\n" ~
-			"\t-v\tverbose output\n" ~
-			"DEFAULTS:\n\t(prefix)\t0, 1, ..., N\n\t(# of files)\tall files in a directory\n" ~
-			"EXAMPLE:\n\tgoal\t rename 50 files in testdir\n\tcommand\t ./incrn ../testdir - 50\n\n" ~
-			"\toutput\t 0.file_extension\n\t\t 1.file_extension\n\t\t ...\n\t\t N.file_extension\n" ~
-			"=====================================================\n"
-		).writeln;
+	string path = "";
+	string prefix = "";
+	size_t startFromNum = 0;
+	bool verbose = false;
+
+	if(args.length < 2) {
+		writefln("\n#incrn: no commands provided! See \'incrn -h\' for more info.\n", path);
 		return;
 	}
 
-	// get directory path
-	immutable dir = args[1].absolutePath;
-	if(!dir.exists && !dir.isDir) {
-		writefln("\n#incrn: directory <%s> does not exist!\n", dir);
+	// get arg options
+	auto argInfo = getopt(
+		args, 
+		"path|p", "path to files", &path, 
+		"prefix|x", "prefix to be added to file name", &prefix,
+		"startFrom", "start from index/number, which is appended to prefix", &startFromNum,
+		"verbose|v", "verbose output", &verbose
+	);
+
+	// print help if needed
+	if(argInfo.helpWanted) {
+		defaultGetoptPrinter("\nincrn version 1.0 - INCremental file ReNaming", argInfo.options);
+		writefln("\nEXAMPLE: incrn --path=data/filder --prefix=projectName --startFrom=121\n");
 		return;
 	}
 
-	// list files in dir (remove files that start with '.' e.g. hidden files)
-	auto list = dir.listdir.filter!(a => a[0] != '.').array;
-	if(list is null) {
-		writefln("\n#incrn: directory <%s> is empty!\n", dir);
+	// find all files
+	auto files = path.listdir;
+	if(files.empty) {
+		writefln("\n#incrn: directory <%s> is empty!\n", path);
 		return;
+	} else {
+		startFromNum = ((startFromNum == 0) ? (files.length) : (startFromNum));
 	}
 
-	// get prefix
-	immutable prefix = ((args.length > 2 && args[2][0] != '-') ? (args[2] ~ "_") : "");
-	if(prefix.isNumeric) {
-		writefln("\n#incrn: prefix <%s> cannot be numeric (do _%s_ instead)!\n", prefix, prefix);
-		return;
-	}
-
-	// create a incrn_renamed directory
-	immutable rndir = dir.buildPath("incrn_renamed");
+	// create a incrn directory
+	immutable rndir = path.buildPath("incrn");
 	if(!rndir.exists) {
 		rndir.mkdirRecurse;
 	}
 
-	// count files
-	immutable n = (
-		(args.length > 3 && args[3].isNumeric) ? 
-			((args[3].to!int <= list.length) ? args[3].to!int : 0) : 
-			list.length
-	);
-
-	// verbose output
-	immutable verbose = args.canFind("-v");
-
-	// print status
-	if(verbose) {
-		"\n#incrn: path\t= %s".writefln(dir);
-		"#incrn: prefix\t= %s".writefln(prefix);
-		"#incrn: files\t= %s\n".writefln(n);
-
-		"#incrn: RENAMING|\n----------------|".writeln;
-	}
+	if(verbose) { writefln("\n#incrn: renaming..."); }
 
 
 	//rename files and save them to rndir
-	foreach(i, file; list[0..n]) {
+	foreach(i, file; files) {
 		// retrieve extension, oldName, newName
+		immutable index = (i + startFromNum).to!string;
 		immutable extension = (file.canFind(".") ? ("." ~ file.split(".")[$-1]) : "");
-		immutable oldName = dir.buildPath(file);
-		immutable newName = rndir.buildPath(prefix ~ i.to!string ~ extension);
+		immutable oldName = path.buildPath(file);
+		immutable newName = rndir.buildPath(prefix ~ index ~ extension);
 
 		if(verbose) {
-			"#incrn: %s: %s >> %s".writefln(i, file, prefix ~ i.to!string ~ extension);
+			"#incrn: %s: %s => %s".writefln(i, file, prefix ~ index ~ extension);
 		}
 
 		oldName.copy(newName);
 	}
 
-	writefln("\n#incrn: %s files have been renamed!", n);
-	writefln("#incrn: saved to %s\n", rndir);
+	if(verbose) {
+		writefln("#incrn: %s files were renamed!", files.length);
+		writefln("#incrn: saved to <%s>", rndir);
+		writefln("#incrn: done.\n");
+	}
 }
 
-string[] listdir(string dir) {
-    return dirEntries(dir, SpanMode.shallow)
-        .filter!(a => a.isFile)
-        .map!(a => baseName(a.name))
-        .array;
+/++ 
+filess files in a specified directory
+
+Params:
+	path = path to files
+
+Returns: string[]
++/
+string[] listdir(const string path) {
+	import std.file: dirEntries, SpanMode, isFile;
+	import std.path: baseName;
+	import std.algorithm: filter, map;
+	import std.array: array;
+
+	return dirEntries(path, SpanMode.shallow)
+		.filter!(a => a.isFile)
+		.map!(a => baseName(a.name))
+		.filter!(a => a[0] != '.')
+		.array;
 }
 
 
