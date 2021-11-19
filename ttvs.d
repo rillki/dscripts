@@ -5,25 +5,36 @@ import std.stdio: writefln;
 import std.array: empty;
 import std.path: buildPath;
 import std.file: getcwd, exists, mkdirRecurse, copy;
-import std.getopt: getopt, defaultGetoptPrinter;
+import std.getopt: getopt, GetoptResult, defaultGetoptPrinter;
 import std.random: uniform;
 import std.algorithm: remove;
 import std.parallelism: parallel;
 
 void main(string[] args) {
+	if(args.length < 2) {
+		writefln("\n#ttsv: no commands provided! See \'ttsv -h\' for more info.\n");
+		return;
+	}
+
 	string path = "";
 	size_t test = 20;
 	size_t val = 20;
 	bool verbose = false;
 	
 	// get arg options
-	auto argInfo = getopt(
-		args,
-		"path|p", "path to files", &path,
-		"test", "test percentage ratio", &test,
-		"val", "validation percentage ratio", &val,
-		"verbose|v", "verbose output (true by default)", &verbose
-	);
+	GetoptResult argInfo;
+	try {
+		argInfo = getopt(
+			args,
+			"path|p", "path to files", &path,
+			"test", "test percentage ratio", &test,
+			"val", "validation percentage ratio", &val,
+			"verbose|v", "verbose output (true by default)", &verbose
+		);
+	} catch(Exception e) {
+		writefln("\n#ttsv: error! %s\n", e.msg);
+		return;
+	}
 	
 	// print help if needed
 	if(argInfo.helpWanted) {

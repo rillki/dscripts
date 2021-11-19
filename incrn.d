@@ -1,4 +1,5 @@
 #!/usr/bin/env rdmd
+module incrn;
 
 import std.stdio: writefln;
 import std.conv: to;
@@ -6,7 +7,7 @@ import std.file: mkdirRecurse, exists, copy;
 import std.path: buildPath;
 import std.array: empty;
 import std.string: split;
-import std.getopt: getopt, defaultGetoptPrinter;
+import std.getopt: getopt, GetoptResult, defaultGetoptPrinter;
 import std.algorithm: canFind;
 
 void main(string[] args) {
@@ -16,18 +17,24 @@ void main(string[] args) {
 	bool verbose = false;
 
 	if(args.length < 2) {
-		writefln("\n#incrn: no commands provided! See \'incrn -h\' for more info.\n", path);
+		writefln("\n#incrn: no commands provided! See \'incrn -h\' for more info.\n");
 		return;
 	}
 
 	// get arg options
-	auto argInfo = getopt(
-		args, 
-		"path|p", "path to files", &path, 
-		"prefix|x", "prefix to be added to file name", &prefix,
-		"startFrom", "start from index/number, which is appended to prefix", &startFromNum,
-		"verbose|v", "verbose output", &verbose
-	);
+	GetoptResult argInfo;
+	try {
+		argInfo = getopt(
+			args, 
+			"path|p", "path to files", &path, 
+			"prefix|x", "prefix to be added to file name", &prefix,
+			"startFrom", "start from index/number, which is appended to prefix", &startFromNum,
+			"verbose|v", "verbose output", &verbose
+		);
+	} catch(Exception e) {
+		writefln("\n#incrn: error! %s\n", e.msg);
+		return;
+	}
 
 	// print help if needed
 	if(argInfo.helpWanted) {
