@@ -27,13 +27,13 @@ def downloadFromPlaylist(url = None, audio = False, savePath = None, num = 0, ve
         return
     
     p = Playlist(url)
-    for i in range(0, len(p.videos)):
-        if i > num:
+    for i in range(0, len(list(p.videos))):
+        if i >= num:
             break
         else:
             vid = p.videos[i]
             if verbose:
-                print(f'Downloading: {vid.title}')
+                print(f'Downloading:({i}) {vid.title}')
 
             if audio:
                 vid.streams.filter(only_audio = True, file_extension = 'webm', abr =
@@ -46,8 +46,8 @@ def downloadFromPlaylist(url = None, audio = False, savePath = None, num = 0, ve
 parser = argparse.ArgumentParser('Youtube downloader v.1.0')
 parser.add_argument('-a', '--audio', metavar = '\b', action=argparse.BooleanOptionalAction, default = False, help = 'audio only')
 parser.add_argument('-n', '--quantity', metavar = '\b', type=int, default = 0, help = 'number of videos to download from a playlist')
-parser.add_argument('-u', '--url', metavar = '\b', type = ascii, default = None, help = 'youtube playlist or video url')
-parser.add_argument('-s', '--save', metavar = '\b', type = ascii, default = 'y2b-downloads', help = 'save path')
+parser.add_argument('-u', '--url', metavar = '\b', default = None, help = 'youtube playlist or video url')
+parser.add_argument('-s', '--save', metavar = '\b', default ='y2b-downloads', help = 'save path')
 parser.add_argument('-v', '--verbose', metavar = '\b', action=argparse.BooleanOptionalAction,
         default = False, help = 'verbose output')
 
@@ -58,12 +58,14 @@ if args.url is None:
     print('No URL supplied! Exiting...')
     sys.exit()
 
+print("\n------------- PYTUBE DOWNLOADER -------------\n")
+
 if args.quantity > 0:
     downloadFromPlaylist(args.url, args.audio, args.save, args.quantity, args.verbose)
 else:
     downloadVideo(args.url, args.audio, args.save, args.verbose)
 
-print('DONE\n')
+print('\n------------------- DONE --------------------\n')
 
 
 
