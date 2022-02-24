@@ -2,7 +2,6 @@
 import os
 import sys
 import cv2 as cv
-import numpy as np
 
 # default values
 imgs_folder = ''

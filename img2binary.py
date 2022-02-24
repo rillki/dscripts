@@ -11,7 +11,7 @@ output_folder = ''
 # get arguments
 argv = sys.argv[1:]
 if len(argv) < 2:
-    print("\n#imgresize: imgresize.py [imgs_folder] [output_folder]\n")
+    print("\n#img2binary: img2binary.py [imgs_folder] [output_folder]\n")
     sys.exit()
 else:
     imgs_folder = argv[0]
