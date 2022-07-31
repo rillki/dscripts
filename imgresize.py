@@ -13,8 +13,8 @@ inter = cv.INTER_AREA
 # get arguments
 argv = sys.argv[1:]
 if len(argv) < 2:
-    print("\n#imgresize: imgresize.py [imgs_folder] [output_folder] {width} {height} up/down\n")
-    print("\n#imgresize: imgresize.py ../data ../data/tmp 1280 1080 up\n")
+    print("\n#imgresize: imgresize.py [imgs_folder] [output_folder] {width} {height} up/down")
+    print("#imgresize: imgresize.py ../data ../data/tmp 1280 1080 up\n")
     sys.exit()
 elif len(argv) == 2:
     imgs_folder = argv[0]
