@@ -82,7 +82,7 @@ def downloadFromFile(fileName = None, audio = False, savePath = None, verbose = 
 
 
 # set up argparser
-parser = argparse.ArgumentParser('Youtube downloader v.1.0')
+parser = argparse.ArgumentParser('Youtube downloader v.1.1')
 parser.add_argument('-a', '--audio', metavar = '\b', action=argparse.BooleanOptionalAction, default = False, help = 'audio only')
 parser.add_argument('-n', '--quantity', metavar = '\b', type=int, default = 0, help = 'number of videos to download from a playlist')
 parser.add_argument('-u', '--url', metavar = '\b', default = None, help = 'youtube playlist or video url')
