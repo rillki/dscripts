@@ -1,20 +1,39 @@
 import std;
 
-void main() {
-	auto folder = "templabels";
-	auto savefolder = folder.buildPath("save");
-	auto files = folder.listdir;
-	foreach(file; files) {
-		File saveFile = File(savefolder.buildPath(file), "w");
-		scope(exit) { saveFile.close(); }
+void main(string[] args) 
+{
+    if (args.length < 3)
+    {
+        writeln("USAGE: ./fix_labels.d [INPUT] [OUTPUT]");
+        return;
+    }
 
-		auto data = folder
-					.buildPath(file)
-					.readText
-					.splitter("\n")
-					.filter!(a => !a.empty)
-					.map!(a => a.split)
-					.array;
+	auto folder = args[1];
+	auto savefolder = args[2];
+    if (!savefolder.exists) 
+    {
+        savefolder.mkdirRecurse;
+    }
+
+	auto files = folder.listdir;
+    if (files.empty)
+    {
+        writeln("No files found!");
+        return;
+    }
+
+	foreach (file; files) 
+    {
+        auto data = folder
+            .buildPath(file)
+            .readText
+            .splitter("\n")
+            .filter!(a => !a.empty)
+            .map!(a => a.split)
+            .array;
+    	
+        File saveFile = File(savefolder.buildPath(file), "w");
+		scope(exit) { saveFile.close(); }
 
 		foreach(line; data) {
 			if(line[0] == "0") {
@@ -31,7 +50,8 @@ void main() {
 	}
 }
 
-string[] listdir(const string dir) {
+string[] listdir(string dir) 
+{
 	import std.file: dirEntries, SpanMode, isFile;
 	import std.path: baseName;
 	import std.algorithm: filter, map;
@@ -43,3 +63,5 @@ string[] listdir(const string dir) {
 		.filter!(a => a[0] != '.')
 		.array;
 }
+
+
