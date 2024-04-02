@@ -23,7 +23,7 @@ def insta_upload_photo(image_path: str):
     with open(image_path, 'rb') as file:
         image = Image(file)
         if image.has_exif:
-            caption = 'D' + os.path.basename(image_path).split('.')[0] + '.\n\n'
+            caption = os.path.basename(image_path).split('.')[0] + '.\n\n'
             caption += ' | '.join([
                 f'{image.make} {image.model}',
                 f'f{image.f_number}',
@@ -71,7 +71,7 @@ if __name__ == '__main__':
         # get next image in queue
         with open(config_file, 'r') as f:
             image_name = f.read().strip()
-            image_path = f'{int(image_name) + 1}.jpg'
+            image_path = f'D{int(image_name[1:]) + 1}.jpg'
 
     # log
     print(log_header, f'Image selected: <{image_path}>')
