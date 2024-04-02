@@ -23,7 +23,7 @@ def insta_upload_photo(image_path: str):
     with open(image_path, 'rb') as file:
         image = Image(file)
         if image.has_exif:
-            caption = 'D' + os.path.basename(image_path).split('.')[0] + '\n\n'
+            caption = 'D' + os.path.basename(image_path).split('.')[0] + '.\n\n'
             caption += ' | '.join([
                 f'{image.make} {image.model}',
                 f'f{image.f_number}',
