@@ -3,6 +3,7 @@
 bin/
 __internal/
 lib/
+.insta*
 
 # Compiled Object files
 *.o
