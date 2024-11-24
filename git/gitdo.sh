@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # actions
 gitdo_actions=("push" "pull" "help")
