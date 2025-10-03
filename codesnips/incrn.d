@@ -91,36 +91,20 @@ Params:
 
 Returns: string[]
 +/
-string[] listdir(const string path) {
+string[] listdir(const string path, bool sortByName = true) {
 	import std.file: dirEntries, SpanMode, isFile;
 	import std.path: baseName;
-	import std.algorithm: filter, map;
+	import std.algorithm: filter, map, sort;
 	import std.array: array;
 
-	return dirEntries(path, SpanMode.shallow)
-		.filter!(a => a.isFile)
+	auto files = dirEntries(path, SpanMode.shallow)
+	    .filter!(a => a.isFile)
+	    .array;
+	
+	return (sortByName ? files.sort!((a, b) => a.name < b.name).release : files)
 		.map!(a => baseName(a.name))
 		.filter!(a => a[0] != '.')
 		.array;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
