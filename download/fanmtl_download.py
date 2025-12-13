@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.12
+#!/usr/bin/env python3.11
 
 # system
 import os
@@ -48,7 +48,7 @@ if __name__ == '__main__':
         
         # find chapter navigation
         print(f'[ html2pdf ] Looking for chapter nagivation section...')
-        result = soup.find_all('div', class_='m-read')
+        result = soup.find_all('div', class_='chapternav skiptranslate notranslate')
         if not len(result):
             print(f'[ html2pdf ] error')
             break
@@ -60,12 +60,11 @@ if __name__ == '__main__':
             print(f'[ html2pdf ] error')
             break
         
-        print('RESULT:\n---\n', result)
         # select url to next chapter
         print(f'[ html2pdf ] Selecting URL to next chapter...')
         next_url = None
         for href in result:
-            if href.get('id') == 'next_url':
+            if href['class'][0] == 'nextchap':
                 next_url = urljoin(url, href['href']) # convert relative URL to absolute URL
                 break
                 
