@@ -60,7 +60,6 @@ if __name__ == '__main__':
             print(f'[ html2pdf ] error')
             break
         
-        print('RESULT:\n---\n', result)
         # select url to next chapter
         print(f'[ html2pdf ] Selecting URL to next chapter...')
         next_url = None
