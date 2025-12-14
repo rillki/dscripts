@@ -69,8 +69,8 @@ if __name__ == '__main__':
                 break
                 
         # save html
-        print(f'[ html2pdf ] Saving to <({counter}) {title}.html>')
         filename = f'({counter}) {title if len(title) < filename_max else title[:filename_max]}....html' 
+        print(f'[ html2pdf ] Saving to <({counter}) {filename}>')
         with open(os.path.join(save_folder, filename), 'w') as f: 
             f.write(page)
 
