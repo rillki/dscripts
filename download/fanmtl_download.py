@@ -70,8 +70,9 @@ if __name__ == '__main__':
                 
         # save html
         filename = f'({counter}) {title if len(title) < filename_max else title[:filename_max]}....html' 
-        print(f'[ html2pdf ] Saving to <({counter}) {filename}>')
-        with open(os.path.join(save_folder, filename), 'w') as f: 
+        filename_path = os.path.join(save_folder, filename)
+        print(f'[ html2pdf ] Saving to <{filename_path}>')
+        with open(filename_path, 'w') as f: 
             f.write(page)
 
         # set url
